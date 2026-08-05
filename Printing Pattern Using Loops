@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1) return 0;
+
+    int len = 2 * n - 1;
+
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            // Find minimum distance from the 4 edges
+            int min = i;
+            if (j < min) min = j;
+            if (len - 1 - i < min) min = len - 1 - i;
+            if (len - 1 - j < min) min = len - 1 - j;
+
+            // Print the value followed by a space
+            printf("%d ", n - min);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
