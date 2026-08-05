@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+void calculate_the_maximum(int n, int k) {
+    int maxAnd = 0;
+    int maxOr = 0;
+    int maxXor = 0;
+
+    // Iterate through all pairs (i, j) where 1 <= i < j <= n
+    for (int i = 1; i <= n; i++) {
+        for (int j = i + 1; j <= n; j++) {
+            int currentAnd = i & j;
+            int currentOr  = i | j;
+            int currentXor = i ^ j;
+
+            // Check if current AND value is maximum and strictly less than k
+            if (currentAnd > maxAnd && currentAnd < k) {
+                maxAnd = currentAnd;
+            }
+            // Check if current OR value is maximum and strictly less than k
+            if (currentOr > maxOr && currentOr < k) {
+                maxOr = currentOr;
+            }
+            // Check if current XOR value is maximum and strictly less than k
+            if (currentXor > maxXor && currentXor < k) {
+                maxXor = currentXor;
+            }
+        }
+    }
+
+    // Print results on separate lines as required
+    printf("%d\n%d\n%d\n", maxAnd, maxOr, maxXor);
+}
+
+int main() {
+    int n, k;
+  
+    // Read the space-separated integers n and k
+    scanf("%d %d", &n, &k);
+    
+    // Calculate and print the results
+    calculate_the_maximum(n, k);
+ 
+    return 0;
+}
