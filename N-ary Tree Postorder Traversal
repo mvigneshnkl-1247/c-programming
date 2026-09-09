@@ -1,0 +1,63 @@
+#include <stdlib.h>
+
+/**
+ * Definition for a Node.
+ * struct Node {
+ *     int val;
+ *     int numChildren;
+ *     struct Node** children;
+ * };
+ */
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* postorder(struct Node* root, int* returnSize) {
+    *returnSize = 0;
+    
+    // Allocate space for results based on constraints (up to 10^4 nodes)
+    int* result = (int*)malloc(10000 * sizeof(int));
+    if (root == NULL) {
+        return result;
+    }
+    
+    // Explicit stack array to hold Node pointers during traversal
+    struct Node** stack = (struct Node**)malloc(10000 * sizeof(struct Node*));
+    int top = -1;
+    
+    // Temporary array to hold node values in reverse postorder format
+    int* tempResult = (int*)malloc(10000 * sizeof(int));
+    int tempCount = 0;
+    
+    // Push the root node onto the stack
+    stack[++top] = root;
+    
+    while (top != -1) {
+        // Pop the top node
+        struct Node* curr = stack[top--];
+        
+        // Collect current node value into our temporary collector array
+        tempResult[tempCount++] = curr->val;
+        
+        // Push children onto the stack from LEFT to RIGHT
+        // This ensures the rightmost child sits at the top of the stack and is processed next
+        for (int i = 0; i < curr->numChildren; i++) {
+            if (curr->children[i] != NULL) {
+                stack[++top] = curr->children[i];
+            }
+        }
+    }
+    
+    // Reverse the collector array to achieve true postorder (Children -> Root)
+    for (int i = 0; i < tempCount; i++) {
+        result[i] = tempResult[tempCount - 1 - i];
+    }
+    
+    *returnSize = tempCount;
+    
+    // Clean up auxiliary memory allocations
+    free(stack);
+    free(tempResult);
+    
+    return result;
+}
