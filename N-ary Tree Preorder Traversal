@@ -1,0 +1,49 @@
+#include <stdlib.h>
+
+/**
+ * Definition for a Node.
+ * struct Node {
+ *     int val;
+ *     int numChildren;
+ *     struct Node** children;
+ * };
+ */
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* preorder(struct Node* root, int* returnSize) {
+    *returnSize = 0;
+    
+    // Allocate space for the results based on constraints (up to 10^4 nodes)
+    int* result = (int*)malloc(10000 * sizeof(int));
+    if (root == NULL) {
+        return result;
+    }
+    
+    // Explicit stack array to hold Node pointers
+    struct Node** stack = (struct Node**)malloc(10000 * sizeof(struct Node*));
+    int top = -1;
+    
+    // Push the root node onto the stack
+    stack[++top] = root;
+    
+    while (top != -1) {
+        // Pop the top node
+        struct Node* curr = stack[top--];
+        
+        // Process the current node's value
+        result[(*returnSize)++] = curr->val;
+        
+        // Push children onto the stack in REVERSE order (right to left)
+        // This ensures the leftmost child sits at the top of the stack
+        for (int i = curr->numChildren - 1; i >= 0; i--) {
+            if (curr->children[i] != NULL) {
+                stack[++top] = curr->children[i];
+            }
+        }
+    }
+    
+    free(stack); // Clean up the auxiliary stack memory
+    return result;
+}
