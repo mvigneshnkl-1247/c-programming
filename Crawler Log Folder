@@ -1,0 +1,5 @@
+int minOperations(char** logs, int logsSize) {
+    for (int d = 0 ; logsSize-- || (logsSize = d, 0) ; logs++)
+        d += (**logs != '.') - (**logs == '.' && (*logs)[1] == '.' && d > 0);
+    return logsSize;
+}
