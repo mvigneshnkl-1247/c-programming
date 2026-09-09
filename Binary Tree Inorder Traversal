@@ -1,0 +1,49 @@
+#include <stdlib.h>
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    *returnSize = 0;
+    
+    // Constraints state maximum 100 nodes, so we can allocate maximum capacity
+    int* result = (int*)malloc(100 * sizeof(int));
+    if (root == NULL) {
+        return result;
+    }
+    
+    // Explicit stack array to simulate recursion
+    struct TreeNode** stack = (struct TreeNode**)malloc(100 * sizeof(struct TreeNode*));
+    int top = -1;
+    
+    struct TreeNode* curr = root;
+    
+    while (curr != NULL || top != -1) {
+        // Reach the leftmost node of the current node
+        while (curr != NULL) {
+            stack[++top] = curr; // Push current node to stack
+            curr = curr->left;
+        }
+        
+        // Current must be NULL at this point, pop from stack
+        curr = stack[top--];
+        
+        // Add the node value to our result array
+        result[(*returnSize)++] = curr->val;
+        
+        // We have visited the node and its left subtree. Now, it's the right subtree's turn
+        curr = curr->right;
+    }
+    
+    free(stack); // Clean up stack allocation
+    return result;
+}
