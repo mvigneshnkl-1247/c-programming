@@ -1,0 +1,17 @@
+#include <stdbool.h>
+
+bool isSubsequence(char* s, char* t) {
+    int i = 0; // Pointer for s
+    int j = 0; // Pointer for t
+    
+    // Loop until we reach the end of either string
+    while (s[i] != '\0' && t[j] != '\0') {
+        if (s[i] == t[j]) {
+            i++; // Character matched, move s pointer
+        }
+        j++; // Always move t pointer
+    }
+    
+    // If we matched all characters of s, s[i] will be the null terminator '\0'
+    return s[i] == '\0';
+}
