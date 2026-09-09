@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    // Array to track if a number exists in nums1 (values bounded from 0 to 1000)
+    int lookup[1001] = {0};
+    
+    // Mark elements present in nums1
+    for (int i = 0; i < nums1Size; i++) {
+        lookup[nums1[i]] = 1;
+    }
+    
+    // Allocate space for the result array
+    // Maximum possible intersection size is the size of the smaller array
+    int maxIntersectionSize = (nums1Size < nums2Size) ? nums1Size : nums2Size;
+    int* result = (int*)malloc(maxIntersectionSize * sizeof(int));
+    int count = 0;
+    
+    // Check elements of nums2 against the lookup table
+    for (int i = 0; i < nums2Size; i++) {
+        int currentNum = nums2[i];
+        
+        // If it exists in nums1 (lookup == 1), add to result and mark as 2 to prevent duplicates
+        if (lookup[currentNum] == 1) {
+            result[count] = currentNum;
+            count++;
+            lookup[currentNum] = 2; // Marked as processed
+        }
+    }
+    
+    // Shrink the memory allocation to match the actual intersection count
+    *returnSize = count;
+    if (count == 0) {
+        free(result);
+        return NULL;
+    }
+    
+    result = (int*)realloc(result, count * sizeof(int));
+    return result;
+}
