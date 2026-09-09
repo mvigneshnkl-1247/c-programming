@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    // Array to count frequencies of each number in nums1 (values bounded from 0 to 1000)
+    int counts[1001] = {0};
+    
+    // Count the frequency of each element in nums1
+    for (int i = 0; i < nums1Size; i++) {
+        counts[nums1[i]]++;
+    }
+    
+    // Allocate space for the result array
+    // The maximum possible intersection size is the size of the smaller array
+    int maxIntersectionSize = (nums1Size < nums2Size) ? nums1Size : nums2Size;
+    int* result = (int*)malloc(maxIntersectionSize * sizeof(int));
+    int count = 0;
+    
+    // Check elements of nums2 against our frequency table
+    for (int i = 0; i < nums2Size; i++) {
+        int currentNum = nums2[i];
+        
+        // If the number exists in nums1 and still has remaining frequency
+        if (counts[currentNum] > 0) {
+            result[count] = currentNum;
+            count++;
+            counts[currentNum]--; // Decrement the available frequency count
+        }
+    }
+    
+    *returnSize = count;
+    
+    // Handle edge case where intersection is empty
+    if (count == 0) {
+        free(result);
+        return NULL;
+    }
+    
+    // Shrink the memory allocation to fit the exact intersection size
+    result = (int*)realloc(result, count * sizeof(int));
+    return result;
+}
