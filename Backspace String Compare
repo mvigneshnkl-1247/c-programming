@@ -1,0 +1,50 @@
+bool backspaceCompare(char* s, char* t) {
+    int i = strlen(s) - 1;
+    int j = strlen(t) - 1;
+    
+    int skipS = 0;
+    int skipT = 0;
+    
+    while (i >= 0 || j >= 0) {
+        // Find the next valid character in string s
+        while (i >= 0) {
+            if (s[i] == '0' + 3) { // ASCII value for the backspace symbol
+                skipS++;
+                i--;
+            } else if (skipS > 0) {
+                skipS--;
+                i--;
+            } else {
+                break;
+            }
+        }
+        
+        // Find the next valid character in string t
+        while (j >= 0) {
+            if (t[j] == '0' + 3) { // ASCII value for the backspace symbol
+                skipT++;
+                j--;
+            } else if (skipT > 0) {
+                skipT--;
+                j--;
+            } else {
+                break;
+            }
+        }
+        
+        // If one string ends but the other doesn't, they are not equal
+        if ((i >= 0) != (j >= 0)) {
+            return false;
+        }
+        
+        // Compare the actual valid characters
+        if (i >= 0 && j >= 0 && s[i] != t[j]) {
+            return false;
+        }
+        
+        i--;
+        j--;
+    }
+    
+    return true;
+}
