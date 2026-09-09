@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* findDisappearedNumbers(int* nums, int numsSize, int* returnSize) {
+    // Step 1: Mark visited elements by negating the values at the mapped indices
+    for (int i = 0; i < numsSize; i++) {
+        // Use abs() because the element might have already been negated
+        int index = abs(nums[i]) - 1;
+        if (nums[index] > 0) {
+            nums[index] = -nums[index];
+        }
+    }
+
+    // Step 2: Identify missing numbers (indices that remain positive)
+    int* result = (int*)malloc(numsSize * sizeof(int));
+    int count = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] > 0) {
+            result[count] = i + 1; // Index i corresponds to missing number i + 1
+            count++;
+        } else {
+            // Optional: Restore original array values if needed by the caller
+            nums[i] = -nums[i];
+        }
+    }
+
+    // Step 3: Resize the result array to the exact number of missing elements
+    *returnSize = count;
+    if (count == 0) {
+        free(result);
+        return NULL;
+    }
+
+    result = (int*)realloc(result, count * sizeof(int));
+    return result;
+}
