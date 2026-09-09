@@ -1,0 +1,62 @@
+#include <stdlib.h>
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* postorderTraversal(struct TreeNode* root, int* returnSize) {
+    *returnSize = 0;
+    
+    // Constraints state maximum 100 nodes, so we allocate maximum capacity
+    int* result = (int*)malloc(100 * sizeof(int));
+    if (root == NULL) {
+        return result;
+    }
+    
+    // Traversal stack array to hold node pointers
+    struct TreeNode** stack = (struct TreeNode**)malloc(100 * sizeof(struct TreeNode*));
+    int top = -1;
+    
+    // Temporary array to hold values in reverse postorder format
+    int tempResult[100];
+    int tempCount = 0;
+    
+    // Push the root node onto the stack
+    stack[++top] = root;
+    
+    while (top != -1) {
+        // Pop the top node
+        struct TreeNode* curr = stack[top--];
+        
+        // Push current node value into our temporary collector array
+        tempResult[tempCount++] = curr->val;
+        
+        // Push left child first so it is processed AFTER the right child
+        if (curr->left != NULL) {
+            stack[++top] = curr->left;
+        }
+        
+        // Push right child second so it sits on top of the stack and gets processed next
+        if (curr->right != NULL) {
+            stack[++top] = curr->right;
+        }
+    }
+    
+    // Reverse the collector array to achieve true postorder (Left -> Right -> Root)
+    for (int i = 0; i < tempCount; i++) {
+        result[i] = tempResult[tempCount - 1 - i];
+    }
+    
+    *returnSize = tempCount;
+    
+    free(stack); // Clean up stack allocation
+    return result;
+}
