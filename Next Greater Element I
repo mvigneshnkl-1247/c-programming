@@ -1,0 +1,41 @@
+#include <stdlib.h>
+#include <string.h>
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    *returnSize = nums1Size;
+    int* ans = (int*)malloc(nums1Size * sizeof(int));
+    
+    // Direct lookup map for element -> its next greater element
+    // Constraints say: 0 <= nums2[i] <= 10000
+    int nextGreaterMap[10001];
+    memset(nextGreaterMap, -1, sizeof(nextGreaterMap));
+    
+    // Explicit stack to maintain elements in a decreasing order
+    int* stack = (int*)malloc(nums2Size * sizeof(int));
+    int top = -1;
+    
+    // Process nums2 to map every element to its next greater element
+    for (int i = 0; i < nums2Size; i++) {
+        int current = nums2[i];
+        
+        // While current element is greater than the element on top of the stack
+        while (top != -1 && current > stack[top]) {
+            int poppedElement = stack[top--];
+            nextGreaterMap[poppedElement] = current;
+        }
+        
+        // Push the current element onto the stack
+        stack[++top] = current;
+    }
+    
+    // Map the results back to nums1
+    for (int i = 0; i < nums1Size; i++) {
+        ans[i] = nextGreaterMap[nums1[i]];
+    }
+    
+    free(stack);
+    return ans;
+}
