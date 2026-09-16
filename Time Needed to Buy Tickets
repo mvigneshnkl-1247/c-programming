@@ -1,0 +1,13 @@
+int timeRequiredToBuy(int* tickets, int ticketsSize, int k){ 
+    int ans = 0, ptr = 0;
+    while (tickets[k] !=0){
+        if(tickets[ptr] !=0){
+            tickets[ptr]--;
+            ans++;
+        }
+        ptr++;
+        if (ptr == ticketsSize)
+        ptr = 0;
+    }
+    return ans;
+}
